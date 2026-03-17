@@ -52,9 +52,9 @@ print_banner() {
     echo -e "${FR}  ║ ${C5} ╚████╔╝ ██║ ╚═╝ ██║   ╚███╔███╔╝███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║   ${FR}║${RS}"
     echo -e "${FR}  ║ ${C6}  ╚═══╝  ╚═╝     ╚═╝    ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝   ${FR}║${RS}"
     echo -e "${FR}  ╠══════════════════════════════════════════════════════════════════════════════╣${RS}"
-    echo -e "${FR}  ║ ${WB}  ·.·´¯·.¸¸.·´¯·.¸  ~~ W · E · A · V · E · R ~~  ¸.·´¯·.¸¸.·´¯·.·            ${FR}║${RS}"
-    echo -e "${FR}  ║ ${DM}       Upload · Convert · Serve · Write VM Disk Images                       ${FR}║${RS}"
-    echo -e "${FR}  ║ ${DM}       v${VERSION} · github.com/SamNdirangu/VM-Weaver                               ${FR}║${RS}"
+    echo -e "${FR}  ║ ${WB}      ·.·´¯·.¸¸.·´¯·.¸  ~~ W · E · A · V · E · R ~~  ¸.·´¯·.¸¸.·´¯·.·        ${FR}║${RS}"
+    echo -e "${FR}  ║ ${DM}           Upload · Convert · Serve · Write VM Disk Images                   ${FR}║${RS}"
+    echo -e "${FR}  ║ ${DM}           v${VERSION} · github.com/SamNdirangu/VM-Weaver                           ${FR}║${RS}"
     echo -e "${FR}  ╚══════════════════════════════════════════════════════════════════════════════╝${RS}"
     echo
 }
@@ -659,68 +659,68 @@ def build_index(files, host):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>VM Weaver — Disk Image Server</title>
 <style>
-  :root {
-    --bg:      #f5f0e8;   /* warm parchment */
-    --surface: #ede7d9;
-    --card:    #faf7f2;
-    --border:  #c8b99a;
-    --accent:  #b45309;   /* amber-brown, echoes the terminal C1 */
-    --text:    #1c1410;
-    --muted:   #78624a;
-    --green:   #15803d;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
+  :root {{
+    --bg:      #0d0d14;
+    --surface: #13131f;
+    --card:    #1a1a2e;
+    --border:  #2a2a45;
+    --accent:  #a855f7;
+    --text:    #e2e8f0;
+    --muted:   #64748b;
+    --green:   #22c55e;
+  }}
+  *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{
     background: var(--bg);
     color: var(--text);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
     padding: 2rem 1rem;
-  }
-  header {
+  }}
+  header {{
     text-align: center;
     margin-bottom: 2.5rem;
-  }
-  .logo {
+  }}
+  .logo {{
     font-size: 2.4rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    background: linear-gradient(135deg, #b45309, #92400e, #78350f);
+    background: linear-gradient(135deg, #a855f7, #3b82f6, #06b6d4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-  .tagline {
+  }}
+  .tagline {{
     color: var(--muted);
     font-size: 0.9rem;
     margin-top: 0.35rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-  .web-decoration {
+  }}
+  .web-decoration {{
     font-size: 0.8rem;
-    color: #c8b99a;
+    color: #3b3b5c;
     margin-top: 0.5rem;
     letter-spacing: 0.15em;
-  }
-  .container {
+  }}
+  .container {{
     max-width: 860px;
     margin: 0 auto;
-  }
-  .section-title {
+  }}
+  .section-title {{
     font-size: 0.75rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 1rem;
     padding-left: 0.25rem;
-  }
-  .cards {
+  }}
+  .cards {{
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-  }
-  .card {
+  }}
+  .card {{
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -729,53 +729,52 @@ def build_index(files, host):
     align-items: center;
     gap: 1rem;
     transition: border-color 0.2s, transform 0.15s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
-  }
-  .card:hover {
+  }}
+  .card:hover {{
     border-color: var(--accent);
     transform: translateY(-1px);
-  }
-  .card-icon {
+  }}
+  .card-icon {{
     font-size: 2rem;
     flex-shrink: 0;
     width: 2.5rem;
     text-align: center;
-  }
-  .card-body {
+  }}
+  .card-body {{
     flex: 1;
     min-width: 0;
-  }
-  .card-name {
+  }}
+  .card-name {{
     font-weight: 600;
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--text);
-  }
-  .card-meta {
+  }}
+  .card-meta {{
     display: flex;
     align-items: center;
     gap: 0.6rem;
     margin-top: 0.3rem;
-  }
-  .badge {
+  }}
+  .badge {{
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     padding: 0.15rem 0.5rem;
     border-radius: 999px;
-  }
-  .card-size {
+  }}
+  .card-size {{
     font-size: 0.78rem;
     color: var(--muted);
-  }
-  .card-actions {
+  }}
+  .card-actions {{
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
-  }
-  .btn-dl, .btn-copy {
+  }}
+  .btn-dl, .btn-copy {{
     font-size: 0.78rem;
     font-weight: 600;
     padding: 0.45rem 0.9rem;
@@ -784,40 +783,40 @@ def build_index(files, host):
     cursor: pointer;
     text-decoration: none;
     transition: opacity 0.15s;
-  }
-  .btn-dl {
-    background: linear-gradient(135deg, #b45309, #92400e);
+  }}
+  .btn-dl {{
+    background: linear-gradient(135deg, #a855f7, #3b82f6);
     color: #fff;
-  }
-  .btn-copy {
+  }}
+  .btn-copy {{
     background: var(--border);
     color: var(--text);
-  }
-  .btn-dl:hover, .btn-copy:hover { opacity: 0.82; }
-  .btn-copy.copied {
-    background: #bbf7d0;
+  }}
+  .btn-dl:hover, .btn-copy:hover {{ opacity: 0.82; }}
+  .btn-copy.copied {{
+    background: #15803d44;
     color: var(--green);
-  }
-  .empty {
+  }}
+  .empty {{
     text-align: center;
     color: var(--muted);
     padding: 3rem;
     border: 1px dashed var(--border);
     border-radius: 12px;
-  }
-  footer {
+  }}
+  footer {{
     text-align: center;
     margin-top: 3rem;
     color: var(--muted);
     font-size: 0.75rem;
     letter-spacing: 0.06em;
-  }
-  footer a { color: var(--accent); text-decoration: none; }
-  @media (max-width: 560px) {
-    .card { flex-wrap: wrap; }
-    .card-actions { width: 100%; }
-    .btn-dl, .btn-copy { flex: 1; text-align: center; }
-  }
+  }}
+  footer a {{ color: var(--accent); text-decoration: none; }}
+  @media (max-width: 560px) {{
+    .card {{ flex-wrap: wrap; }}
+    .card-actions {{ width: 100%; }}
+    .btn-dl, .btn-copy {{ flex: 1; text-align: center; }}
+  }}
 </style>
 </head>
 <body>
