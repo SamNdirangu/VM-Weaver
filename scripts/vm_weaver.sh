@@ -14,7 +14,7 @@
 RED='\033[0;31m';  LRED='\033[1;31m'
 GRN='\033[0;32m';  LGRN='\033[1;32m'
 YLW='\033[1;38;5;226m';  LYLW='\033[1;33m'
-BLU='\033[0;34m';  LBLU='\033[1;34m'
+BLU='\033[38;5;33m;'  LBLU='\033[1;38;5;33m'
 MAG='\033[1;38;5;46m';  LMAG='\033[1;38;5;46m'
 CYN='\033[1;36m';  LCYN='\033[1;36m'
 WHT='\033[1;37m';  DIM='\033[2m'
@@ -22,7 +22,7 @@ BOLD='\033[1m';    RST='\033[0m'
 
 
 # ── Config ────────────────────────────────────────────────────────────────────
-DISK_DIR="${VM_DISK_DIR:-$HOME/vm_disks}"
+DISK_DIR="${VM_DISK_DIR:-/home/user/vm_disks}"
 CONVERTED_DIR="${DISK_DIR}/converted"
 HTTP_PORT="${HTTP_PORT:-8080}"
 HTTP_PID_FILE="/tmp/vm_weaver_http_server.pid"
