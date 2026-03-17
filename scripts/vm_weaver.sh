@@ -3,6 +3,11 @@
 #  VM Weaver — upload, convert, serve & write VM disk images
 #  Supports: VMDK · QCOW2 · VHD · VDI · RAW · OVA · IMG · QED
 #  Requires: Ubuntu 20.04+  |  License: GPL-3.0
+#
+#  Author  : Sam Ndirangu <sndirangu7@gmail.com>
+#  GitHub  : https://github.com/SamNdirangu/VM-Weaver
+#  Version : 2.0.1
+#  Created : 2025
 # =============================================================================
 
 # ── Colours ───────────────────────────────────────────────────────────────────
@@ -99,6 +104,7 @@ install_deps() {
     print_banner
     heading "System Setup & Dependency Installer"
 
+     info "This will install all required packages for VM Weaver."
     info "Packages: qemu-utils, openssh-server, python3, rsync, curl, net-tools, pv"
     echo
     prompt "Proceed with installation? [y/N]: "; read -r ans
