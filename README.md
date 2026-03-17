@@ -5,17 +5,17 @@
 VM Weaver is a terminal-based utility for Linux (Ubuntu 20.04+) that handles the full lifecycle of VM disk image management: upload files to a server via SFTP/SCP/rsync, convert between formats (VMDK, QCOW2, VHD, VDI, RAW, and more), serve them for download over HTTP, or write them directly to a physical disk — no manual `dd` needed.
 
 ```
-  ╔══╡ VM WEAVER ╞════════════════════════════════════════════════════╗
-  ║ ██╗   ██╗███╗   ███╗  ██╗    ██╗███████╗ █████╗ ██╗   ██╗██████╗ ║
-  ║ ██║   ██║████╗ ████║  ██║    ██║██╔════╝██╔══██╗██║   ██║██╔══██╗║
-  ║ ██║   ██║██╔████╔██║  ██║ █╗ ██║█████╗  ███████║██║   ██║██████╔╝║
-  ║ ╚██╗ ██╔╝██║╚██╔╝██║  ██║███╗██║██╔══╝  ██╔══██║╚██╗ ██╔╝██╔══██╗║
-  ║  ╚████╔╝ ██║ ╚═╝ ██║  ╚███╔███╔╝███████╗██║  ██║ ╚████╔╝ ██║  ██║║
-  ║   ╚═══╝  ╚═╝     ╚═╝   ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝  ╚═╝║
-  ╠═══════════════════════════════════════════════════════════════════╣
-  ║  ·.·´¯·.¸¸.·´¯·.¸  ~~ W · E · A · V · E · R ~~  ¸.·´¯·.·      ║
-  ║     Upload · Convert · Serve · Write VM Disk Images               ║
-  ╚═══════════════════════════════════════════════════════════════════╝
+  ╔══╡ VM WEAVER ╞═══════════════════════════════════════════════════════════╗
+  ║ ██╗   ██╗███╗   ███╗  ██╗    ██╗███████╗ █████╗ ██╗   ██╗███████╗██████╗ ║
+  ║ ██║   ██║████╗ ████║  ██║    ██║██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗║
+  ║ ██║   ██║██╔████╔██║  ██║ █╗ ██║█████╗  ███████║██║   ██║█████╗  ██████╔╝║
+  ║ ╚██╗ ██╔╝██║╚██╔╝██║  ██║███╗██║██╔══╝  ██╔══██║╚██╗ ██╔╝██╔══╝  ██╔══██╗║
+  ║  ╚████╔╝ ██║ ╚═╝ ██║  ╚███╔███╔╝███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║║
+  ║   ╚═══╝  ╚═╝     ╚═╝   ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  ·.·´¯·.¸¸.·´¯·.¸  ~~ W · E · A · V · E · R ~~  ¸.·´¯·.·´¯·.¸¸.·´¯·                 ║
+  ║     Upload · Convert · Serve · Write VM Disk Images                      ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
@@ -174,96 +174,6 @@ VM_DISK_DIR=/mnt/storage/vms HTTP_PORT=9000 vm-weaver
 | VirtualBox | `.vdi` | VirtualBox native |
 | Raw | `.raw` / `.img` | Bare-metal compatible, works with `dd` and direct disk writes |
 | QEMU Enhanced Disk | `.qed` | Lightweight QEMU format |
-
----
-
-## Packaging & distribution
-
-### Quick one-liner install (recommended)
-
-The script is fully self-contained. Easiest way to install on any Ubuntu/Debian machine:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/SamNdirangu/VM-Weaver/main/scripts/vm_weaver.sh \
-  -o vm_weaver.sh && sudo bash vm_weaver.sh --install
-```
-
-This downloads the script, runs first-time setup, and registers `vm-weaver` in `/usr/local/bin`.
-
-### As a `.deb` package (apt install)
-
-To make VM Weaver discoverable via `apt install vm-weaver`, you need a Launchpad PPA:
-
-**1. Build the `.deb` package:**
-
-```
-vm-weaver/
-├── DEBIAN/
-│   └── control          ← package metadata
-└── usr/
-    └── local/
-        └── bin/
-            └── vm-weaver  ← the script
-```
-
-`DEBIAN/control`:
-```
-Package: vm-weaver
-Version: 2.0
-Architecture: all
-Maintainer: Your Name <you@example.com>
-Depends: bash, qemu-utils, python3, openssh-server, rsync, pv
-Description: VM disk image manager — upload, convert, serve and write VM disks
- VM Weaver handles the full lifecycle of VM disk image management from
- a single interactive terminal tool.
-```
-
-Build it:
-```bash
-dpkg-deb --build vm-weaver/
-```
-
-**2. Publish to a Launchpad PPA:**
-
-- Create an account at [launchpad.net](https://launchpad.net)
-- Create a PPA (`launchpad.net/~yourname/+archive/ubuntu/vm-weaver`)
-- Upload your source package with `dput`
-
-**3. Users install with:**
-```bash
-sudo add-apt-repository ppa:yourname/vm-weaver
-sudo apt update
-sudo apt install vm-weaver
-```
-
-> **Faster alternative:** Use [Packagecloud](https://packagecloud.io) or [Gemfury](https://gemfury.com) for private/public `.deb` hosting without needing a Launchpad account or GPG signing.
-
----
-
-## Should you split the script into multiple files?
-
-**Short answer: probably not right now.**
-
-The current single-file design is actually a strength — `vm-weaver` is one file you can `curl`, `chmod +x`, and run anywhere with zero extra setup. Splitting into modules (e.g. `lib/convert.sh`, `lib/server.sh`) would require either:
-
-- A **wrapper that sources them** — which means all files must be present and co-located, breaking the simple `curl | bash` install.
-- A **build step** that concatenates them back into one file before distribution — adding tooling complexity.
-
-The right time to split is when the script grows beyond ~2,000 lines and becomes genuinely hard to navigate. At that point, use a build step (e.g. a `Makefile` that `cat`s partials into `dist/vm-weaver`) so the distribution artifact is still a single file.
-
----
-
-## Website / download page
-
-The HTTP server built into VM Weaver already provides a branded download page for serving converted disk images on your local network (accessible at `http://<your-ip>:8080`).
-
-For a **public project page**, the recommended approach is a static site hosted on GitHub Pages:
-
-1. Add a `docs/` folder to the repo with an `index.html` (or use a static site generator like [Hugo](https://gohugo.io) or [Jekyll](https://jekyllrb.com))
-2. Enable GitHub Pages in repo Settings → Pages → Source: `docs/` branch `main`
-3. Your page is live at `https://yourname.github.io/vm-weaver`
-
-A `docs/index.html` with download instructions, usage examples, and a copy of the banner makes for a clean project landing page with zero hosting costs.
 
 ---
 
