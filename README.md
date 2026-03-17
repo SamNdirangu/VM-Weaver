@@ -47,7 +47,7 @@ VM Weaver is a terminal-based utility for Linux (Ubuntu 20.04+) that handles the
 ### Quick install (one command)
 
 ```bash
-git clone https://github.com/yourname/vm-weaver.git
+git clone https://github.com/SamNdirangu/vm-weaver.git
 cd vm-weaver
 sudo bash scripts/vm_weaver.sh --install
 ```
@@ -60,7 +60,7 @@ This will:
 ### Manual install (no git)
 
 ```bash
-curl -O https://raw.githubusercontent.com/yourname/vm-weaver/main/scripts/vm_weaver.sh
+curl -O https://raw.githubusercontent.com/SamNdirangu/vm-weaver/main/scripts/vm_weaver.sh
 chmod +x vm_weaver.sh
 sudo ./vm_weaver.sh --install
 ```
