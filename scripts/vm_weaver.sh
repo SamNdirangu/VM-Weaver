@@ -13,12 +13,13 @@
 # ── Colours ───────────────────────────────────────────────────────────────────
 RED='\033[0;31m';  LRED='\033[1;31m'
 GRN='\033[0;32m';  LGRN='\033[1;32m'
-YLW='\033[0;33m';  LYLW='\033[1;33m'
+YLW='\033[1;38;5;226m';  LYLW='\033[1;33m'
 BLU='\033[0;34m';  LBLU='\033[1;34m'
-MAG='\033[0;35m';  LMAG='\033[1;35m'
-CYN='\033[0;36m';  LCYN='\033[1;36m'
+MAG='\033[1;38;5;46m';  LMAG='\033[1;38;5;46m'
+CYN='\033[1;36m';  LCYN='\033[1;36m'
 WHT='\033[1;37m';  DIM='\033[2m'
 BOLD='\033[1m';    RST='\033[0m'
+
 
 # ── Config ────────────────────────────────────────────────────────────────────
 DISK_DIR="${VM_DISK_DIR:-$HOME/vm_disks}"
@@ -31,17 +32,18 @@ VERSION="2.0"
 # ── Banner ────────────────────────────────────────────────────────────────────
 print_banner() {
     clear
-    # Gradient rows: bright-magenta → magenta → bright-cyan → cyan → bright-green → green
-    local C1='\033[1;35m' C2='\033[0;35m' C3='\033[1;36m'
-    local C4='\033[0;36m' C5='\033[1;32m' C6='\033[0;32m'
-    local FR='\033[38;5;99m'  # deep indigo/purple for frame
-    local WB='\033[1;37m'     # bright white for WEAVER tagline
-    local DM='\033[2m'        # dim for subtitle
-    local RS='\033[0m'        # reset
-    # Each text row must be exactly 78 visible chars so it fits ║_ROW_║
-    #   rows 1-4: content=76 chars → pad 2 trailing spaces
-    #   row 5:    content=77 chars → pad 1 trailing space
-    #   row 6:    content=78 chars → no pad
+    # Gradient rows: bright yellow → gold → orange → amber → burnt → deep red (light→dark top→bottom)
+    local C1='\033[38;5;226m'  # bright yellow           (row 1 - brightest)
+    local C2='\033[38;5;220m'  # gold                    (row 2)
+    local C3='\033[38;5;214m'  # warm orange             (row 3)
+    local C4='\033[38;5;208m'  # orange                  (row 4)
+    local C5='\033[38;5;202m'  # red-orange              (row 5)
+    local C6='\033[38;5;196m'  # bright red              (row 6 - darkest)
+    local FR='\033[0;32m'      # green frame (original dark-mode frame)
+    local WB='\033[1;37m'      # bright white for WEAVER tagline
+    local DM='\033[1;37m'      # bold bright white for subtitles
+    local RS='\033[0m'         # reset
+
     echo -e "${FR}  ╔══╡ VM WEAVER ╞═══════════════════════════════════════════════════════════════╗${RS}"
     echo -e "${FR}  ║ ${C1}██╗   ██╗███╗   ███╗   ██╗    ██╗███████╗ █████╗ ██╗   ██╗███████╗██████╗    ${FR}║${RS}"
     echo -e "${FR}  ║ ${C2}██║   ██║████╗ ████║   ██║    ██║██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗   ${FR}║${RS}"
@@ -657,68 +659,68 @@ def build_index(files, host):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>VM Weaver — Disk Image Server</title>
 <style>
-  :root {{
-    --bg:      #0d0d14;
-    --surface: #13131f;
-    --card:    #1a1a2e;
-    --border:  #2a2a45;
-    --accent:  #a855f7;
-    --text:    #e2e8f0;
-    --muted:   #64748b;
-    --green:   #22c55e;
-  }}
-  *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-  body {{
+  :root {
+    --bg:      #f5f0e8;   /* warm parchment */
+    --surface: #ede7d9;
+    --card:    #faf7f2;
+    --border:  #c8b99a;
+    --accent:  #b45309;   /* amber-brown, echoes the terminal C1 */
+    --text:    #1c1410;
+    --muted:   #78624a;
+    --green:   #15803d;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
     padding: 2rem 1rem;
-  }}
-  header {{
+  }
+  header {
     text-align: center;
     margin-bottom: 2.5rem;
-  }}
-  .logo {{
+  }
+  .logo {
     font-size: 2.4rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    background: linear-gradient(135deg, #a855f7, #3b82f6, #06b6d4);
+    background: linear-gradient(135deg, #b45309, #92400e, #78350f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }}
-  .tagline {{
+  }
+  .tagline {
     color: var(--muted);
     font-size: 0.9rem;
     margin-top: 0.35rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }}
-  .web-decoration {{
+  }
+  .web-decoration {
     font-size: 0.8rem;
-    color: #3b3b5c;
+    color: #c8b99a;
     margin-top: 0.5rem;
     letter-spacing: 0.15em;
-  }}
-  .container {{
+  }
+  .container {
     max-width: 860px;
     margin: 0 auto;
-  }}
-  .section-title {{
+  }
+  .section-title {
     font-size: 0.75rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 1rem;
     padding-left: 0.25rem;
-  }}
-  .cards {{
+  }
+  .cards {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-  }}
-  .card {{
+  }
+  .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -727,52 +729,53 @@ def build_index(files, host):
     align-items: center;
     gap: 1rem;
     transition: border-color 0.2s, transform 0.15s;
-  }}
-  .card:hover {{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  }
+  .card:hover {
     border-color: var(--accent);
     transform: translateY(-1px);
-  }}
-  .card-icon {{
+  }
+  .card-icon {
     font-size: 2rem;
     flex-shrink: 0;
     width: 2.5rem;
     text-align: center;
-  }}
-  .card-body {{
+  }
+  .card-body {
     flex: 1;
     min-width: 0;
-  }}
-  .card-name {{
+  }
+  .card-name {
     font-weight: 600;
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--text);
-  }}
-  .card-meta {{
+  }
+  .card-meta {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     margin-top: 0.3rem;
-  }}
-  .badge {{
+  }
+  .badge {
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     padding: 0.15rem 0.5rem;
     border-radius: 999px;
-  }}
-  .card-size {{
+  }
+  .card-size {
     font-size: 0.78rem;
     color: var(--muted);
-  }}
-  .card-actions {{
+  }
+  .card-actions {
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
-  }}
-  .btn-dl, .btn-copy {{
+  }
+  .btn-dl, .btn-copy {
     font-size: 0.78rem;
     font-weight: 600;
     padding: 0.45rem 0.9rem;
@@ -781,40 +784,40 @@ def build_index(files, host):
     cursor: pointer;
     text-decoration: none;
     transition: opacity 0.15s;
-  }}
-  .btn-dl {{
-    background: linear-gradient(135deg, #a855f7, #3b82f6);
+  }
+  .btn-dl {
+    background: linear-gradient(135deg, #b45309, #92400e);
     color: #fff;
-  }}
-  .btn-copy {{
+  }
+  .btn-copy {
     background: var(--border);
     color: var(--text);
-  }}
-  .btn-dl:hover, .btn-copy:hover {{ opacity: 0.82; }}
-  .btn-copy.copied {{
-    background: #15803d44;
+  }
+  .btn-dl:hover, .btn-copy:hover { opacity: 0.82; }
+  .btn-copy.copied {
+    background: #bbf7d0;
     color: var(--green);
-  }}
-  .empty {{
+  }
+  .empty {
     text-align: center;
     color: var(--muted);
     padding: 3rem;
     border: 1px dashed var(--border);
     border-radius: 12px;
-  }}
-  footer {{
+  }
+  footer {
     text-align: center;
     margin-top: 3rem;
     color: var(--muted);
     font-size: 0.75rem;
     letter-spacing: 0.06em;
-  }}
-  footer a {{ color: var(--accent); text-decoration: none; }}
-  @media (max-width: 560px) {{
-    .card {{ flex-wrap: wrap; }}
-    .card-actions {{ width: 100%; }}
-    .btn-dl, .btn-copy {{ flex: 1; text-align: center; }}
-  }}
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 560px) {
+    .card { flex-wrap: wrap; }
+    .card-actions { width: 100%; }
+    .btn-dl, .btn-copy { flex: 1; text-align: center; }
+  }
 </style>
 </head>
 <body>
@@ -830,7 +833,7 @@ def build_index(files, host):
   </div>
 </div>
 <footer>
-  Served by <a href="https://github.com/yourname/vm-weaver">VM Weaver</a> &nbsp;·&nbsp; {host}
+  Served by <a href="https://github.com/SamNdirangu/vm-weaver">VM Weaver</a> &nbsp;·&nbsp; {host}
 </footer>
 <script>
 function copyLink(btn) {{
