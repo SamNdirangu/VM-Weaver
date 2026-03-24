@@ -20,6 +20,11 @@ CYN='\033[1;36m';  LCYN='\033[1;36m'
 WHT='\033[1;37m';  DIM='\033[2m'
 BOLD='\033[1m';    RST='\033[0m'
 
+# ── Privilege escalation ───────────────────────────────────────────────────────
+if   [ "$(id -u)" -eq 0 ];        then SUDO=""
+elif command -v sudo &>/dev/null;  then SUDO="sudo"
+elif command -v doas &>/dev/null;  then SUDO="doas"
+else SUDO=""; echo "  [!]  No sudo/doas found — privileged commands may fail."; fi
 
 # ── Config ────────────────────────────────────────────────────────────────────
 DISK_DIR="${VM_DISK_DIR:-/home/user/vm_disks}"
@@ -73,11 +78,12 @@ prompt()  { echo -en "${LYLW}  ▶  ${WHT}$*${RST} "; }
 
 spinner() {
     local pid=$1 msg=${2:-"Working…"}
-    local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
-    local i=0
+    local frames='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    local i=0 frame
     while kill -0 "$pid" 2>/dev/null; do
-        printf "\r${CYN}  ${frames[$i]}${RST}  ${DIM}%s${RST}" "$msg"
-        i=$(( (i+1) % ${#frames[@]} ))
+        frame=$(printf '%s' "$frames" | cut -c$((i+1)))
+        printf "\r${CYN}  %s${RST}  ${DIM}%s${RST}" "$frame" "$msg"
+        i=$(( (i+1) % 10 ))
         sleep 0.1
     done
     printf "\r%-70s\r" " "
@@ -117,7 +123,7 @@ install_deps() {
 
     echo
     info "Updating package list…"
-    sudo apk update &>/dev/null &
+    $SUDO apk update &>/dev/null &
     spinner $! "Updating apk package list"
     success "Package list updated."
 
@@ -125,7 +131,7 @@ install_deps() {
     local packages=(qemu-img openssh python3 rsync curl iproute2 pv util-linux)
     for pkg in "${packages[@]}"; do
         info "Installing ${BOLD}${pkg}${RST}…"
-        sudo apk add --no-cache "$pkg" &>/dev/null &
+        $SUDO apk add --no-cache "$pkg" &>/dev/null &
         spinner $! "Installing $pkg"
         if apk_installed "$pkg"; then
             success "$pkg installed."
@@ -136,8 +142,8 @@ install_deps() {
 
     echo
     info "Enabling & starting SSH server…"
-    sudo rc-update add sshd default &>/dev/null
-    sudo rc-service sshd start &>/dev/null
+    $SUDO rc-update add sshd default &>/dev/null
+    $SUDO rc-service sshd start &>/dev/null
     success "SSH server active."
 
     echo
@@ -163,8 +169,8 @@ install_to_bin() {
     local TARGET="/usr/local/bin/vm-weaver"
 
     info "Creating symlink: ${BOLD}${TARGET}${RST} → ${SCRIPT_PATH}"
-    sudo ln -sf "$SCRIPT_PATH" "$TARGET"
-    sudo chmod +x "$SCRIPT_PATH"
+    $SUDO ln -sf "$SCRIPT_PATH" "$TARGET"
+    $SUDO chmod +x "$SCRIPT_PATH"
 
     if [[ -x "$TARGET" ]]; then
         success "vm-weaver is now available system-wide."
@@ -184,8 +190,8 @@ check_deps() {
         warn "Missing packages: ${missing[*]}"
         prompt "Install now? [y/N]: "; read -r ans
         if [[ "${ans,,}" == "y" ]]; then
-            sudo apk update &>/dev/null
-            sudo apk add --no-cache "${missing[@]}"
+            $SUDO apk update &>/dev/null
+            $SUDO apk add --no-cache "${missing[@]}"
         fi
     else
         success "All core dependencies are present."
@@ -238,8 +244,8 @@ show_upload_instructions() {
     box_bot
 
     echo
-    info "Ensure SSH is running:  ${BOLD}sudo rc-service sshd start${RST}"
-    info "Check open port 22:     ${BOLD}sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT${RST}"
+    info "Ensure SSH is running:  ${BOLD}$SUDO rc-service sshd start${RST}"
+    info "Check open port 22:     ${BOLD}$SUDO iptables -A INPUT -p tcp --dport 22 -j ACCEPT${RST}"
     pause
 }
 
@@ -551,7 +557,7 @@ write_to_disk() {
     mapfile -t MOUNTED < <(lsblk -no PATH,MOUNTPOINT "/dev/${DISK_NAMES[$((dsel-1))]}" \
         | awk '$2!="" {print $1}')
     for mp in "${MOUNTED[@]}"; do
-        sudo umount "$mp" 2>/dev/null && info "Unmounted $mp" || true
+        $SUDO umount "$mp" 2>/dev/null && info "Unmounted $mp" || true
     done
 
     echo
@@ -563,12 +569,12 @@ write_to_disk() {
 
     if command -v pv &>/dev/null && [[ "$IMG_SIZE_BYTES" -gt 0 ]]; then
         # Use pv for a nice progress bar
-        sudo pv -pterb -s "$IMG_SIZE_BYTES" "$IMG_FILE" | sudo dd of="$TARGET_DISK" bs=4M conv=fsync 2>/dev/null &
+        $SUDO pv -pterb -s "$IMG_SIZE_BYTES" "$IMG_FILE" | $SUDO dd of="$TARGET_DISK" bs=4M conv=fsync 2>/dev/null &
         local WRITE_PID=$!
         wait $WRITE_PID
         local WRITE_STATUS=$?
     else
-        sudo dd if="$IMG_FILE" of="$TARGET_DISK" bs=4M conv=fsync status=progress &
+        $SUDO dd if="$IMG_FILE" of="$TARGET_DISK" bs=4M conv=fsync status=progress &
         local WRITE_PID=$!
         spinner $WRITE_PID "Writing $(basename "$IMG_FILE") to ${TARGET_DISK}"
         wait $WRITE_PID
@@ -577,7 +583,7 @@ write_to_disk() {
 
     echo
     if [[ $WRITE_STATUS -eq 0 ]]; then
-        sudo sync
+        $SUDO sync
         success "Write complete!"
         hr
         printf "  ${DIM}Image  : ${RST}${WHT}%s${RST}\n" "$(basename "$IMG_FILE")"
@@ -627,8 +633,8 @@ start_http_server() {
 
     # Alpine uses iptables instead of ufw
     if command -v iptables &>/dev/null; then
-        sudo iptables -C INPUT -p tcp --dport "$HTTP_PORT" -j ACCEPT &>/dev/null || \
-            sudo iptables -A INPUT -p tcp --dport "$HTTP_PORT" -j ACCEPT &>/dev/null && \
+        $SUDO iptables -C INPUT -p tcp --dport "$HTTP_PORT" -j ACCEPT &>/dev/null || \
+            $SUDO iptables -A INPUT -p tcp --dport "$HTTP_PORT" -j ACCEPT &>/dev/null && \
             success "Firewall: port ${HTTP_PORT} opened." || true
     fi
 
@@ -698,7 +704,7 @@ stop_http_server() {
         success "Server (PID ${PID}) stopped."
         # Remove the iptables rule added at start
         if command -v iptables &>/dev/null; then
-            sudo iptables -D INPUT -p tcp --dport "$HTTP_PORT" -j ACCEPT &>/dev/null && \
+            $SUDO iptables -D INPUT -p tcp --dport "$HTTP_PORT" -j ACCEPT &>/dev/null && \
                 info "Firewall: port ${HTTP_PORT} closed." || true
         fi
     else
@@ -739,9 +745,9 @@ check_qemu() {
         error "qemu-img not found."
         prompt "Install qemu-img now? [y/N]: "; read -r ans
         if [[ "${ans,,}" == "y" ]]; then
-            sudo apk update &>/dev/null &
+            $SUDO apk update &>/dev/null &
             spinner $! "Updating apk"
-            sudo apk add --no-cache qemu-img
+            $SUDO apk add --no-cache qemu-img
             success "qemu-img installed."
         fi
     fi
